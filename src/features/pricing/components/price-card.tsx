@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { IoCheckmark } from 'react-icons/io5';
 
-import { SexyBoarder } from '@/components/sexy-boarder';
+import { LivingBorder } from '@/components/living-border';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -47,7 +47,7 @@ export function PricingCard({
   const metadata = productMetadataSchema.parse(product.metadata);
   const buttonVariantMap = {
     basic: 'default',
-    pro: 'sexy',
+    pro: 'living',
     enterprise: 'orange',
   } as const;
 
@@ -56,7 +56,7 @@ export function PricingCard({
   }
 
   return (
-    <WithSexyBorder variant={metadata.priceCardVariant} className='w-full flex-1'>
+    <WithLivingBorder variant={metadata.priceCardVariant} className='w-full flex-1'>
       <div className='flex w-full flex-col rounded-md border border-zinc-800 bg-black p-4 lg:p-8'>
         <div className='p-4'>
           <div className='mb-1 text-center font-alt text-xl font-bold'>{product.name}</div>
@@ -102,7 +102,7 @@ export function PricingCard({
           </div>
         )}
       </div>
-    </WithSexyBorder>
+    </WithLivingBorder>
   );
 }
 
@@ -115,16 +115,16 @@ function CheckItem({ text }: { text: string }) {
   );
 }
 
-export function WithSexyBorder({
+export function WithLivingBorder({
   variant,
   className,
   children,
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant: PriceCardVariant }) {
   if (variant === 'pro') {
     return (
-      <SexyBoarder className={className} offset={100}>
+      <LivingBorder className={className} offset={100}>
         {children}
-      </SexyBoarder>
+      </LivingBorder>
     );
   } else {
     return <div className={className}>{children}</div>;

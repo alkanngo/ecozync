@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
 import { Slot } from '@radix-ui/react-slot';
 
-import { SexyBoarder } from '../sexy-boarder';
+import { LivingBorder } from '../living-border';
 
 const buttonVariants = cva(
   'w-fit inline-flex items-center justify-center whitespace-nowrap text-sm rounded-md font-alt font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         orange: 'bg-orange-500 hover:bg-orange-400',
-        sexy: 'transition-all bg-black hover:bg-opacity-0',
+        living: 'transition-all bg-[#0a1f1b] hover:bg-opacity-0 text-[#f0fdf4]',
       },
       size: {
         default: 'h-10 px-4',
@@ -44,15 +44,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
-      <WithSexyBorder variant={variant} className={cn('w-fit', className)}>
+      <WithLivingBorder variant={variant} className={cn('w-fit', className)}>
         <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
-      </WithSexyBorder>
+      </WithLivingBorder>
     );
   }
 );
 Button.displayName = 'Button';
 
-export function WithSexyBorder({
+export function WithLivingBorder({
   variant,
   className,
   children,
@@ -61,8 +61,8 @@ export function WithSexyBorder({
   className?: string;
   children: React.ReactNode;
 }) {
-  if (variant === 'sexy') {
-    return <SexyBoarder className={className}>{children}</SexyBoarder>;
+  if (variant === 'living') {
+    return <LivingBorder className={className}>{children}</LivingBorder>;
   } else {
     return <>{children}</>;
   }

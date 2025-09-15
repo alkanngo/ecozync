@@ -23,6 +23,8 @@ const config: Config = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          dark: 'var(--primary-dark)',
+          medium: 'var(--primary-medium)',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
@@ -39,6 +41,8 @@ const config: Config = {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+          green: 'var(--accent-green)',
+          cyan: 'var(--accent-cyan)',
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
@@ -48,6 +52,14 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        surface: {
+          dark: 'var(--surface-dark)',
+          darker: 'var(--surface-darker)',
+        },
+        text: {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,
@@ -55,8 +67,11 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-montserrat)', ...fontFamily.sans],
-        alt: ['var(--font-montserrat-alternates)'],
+        sans: ['var(--font-batamy)', ...fontFamily.sans],
+        alt: ['var(--font-outfit)'],
+        outfit: ['Outfit', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace'],
+        batamy: ['var(--font-batamy)', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {

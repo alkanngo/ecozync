@@ -1,6 +1,14 @@
 {
-  "name": "UPDATE_THIS_WITH_YOUR_APP_NAME",
+  "name": "ecozync",
   "version": "0.1.0",
+  "description": "Social-first carbon tracking PWA with living interface design",
+  "keywords": [
+    "carbon-tracker",
+    "climate-action",
+    "pwa",
+    "social",
+    "gamification"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -22,6 +30,7 @@
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-slider": "^1.3.6",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.4",
@@ -33,7 +42,9 @@
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.12",
     "lucide-react": "^0.474.0",
+    "motion": "^12.23.12",
     "next": "^15.1.4",
     "next-route-handler-pipe": "^1.0.5",
     "react": "19.0.0",

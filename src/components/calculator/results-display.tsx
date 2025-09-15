@@ -1,0 +1,543 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { 
+  Car, 
+  Download, 
+  Plane, 
+  RotateCcw, 
+  Share2, 
+  Target,
+  TreePine, 
+  Users,
+  Zap
+} from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import CircularText from '@/components/ui/circular-text'
+import { useToast } from '@/components/ui/use-toast'
+
+import type { EmissionCalculation } from './calculation-engine'
+import { getComparisonMetrics } from './calculation-engine'
+
+interface ResultsDisplayProps {
+  results: EmissionCalculation
+  onRestart: () => void
+  isAuthenticated?: boolean
+  onSignUp?: () => void
+  onLogin?: () => void
+  onOffset?: () => void
+  onTrackProgress?: () => void
+  onFindFriends?: () => void
+}
+
+// Animated counter component
+function AnimatedCounter({ 
+  value, 
+  duration = 2000, 
+  className = "",
+  suffix = ""
+}: { 
+  value: number
+  duration?: number
+  className?: string
+  suffix?: string
+}) {
+  const [displayValue, setDisplayValue] = useState(0)
+  
+  useEffect(() => {
+    let startTime: number
+    let animationFrame: number
+    
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const progress = Math.min((currentTime - startTime) / duration, 1)
+      
+      // Easing function for smooth animation
+      const easeOut = 1 - Math.pow(1 - progress, 3)
+      setDisplayValue(Math.floor(value * easeOut))
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate)
+      }
+    }
+    
+    animationFrame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [value, duration])
+  
+  return (
+    <span className={className}>
+      {displayValue.toLocaleString()}{suffix}
+    </span>
+  )
+}
+
+// Circular progress component
+function CircularProgress({ 
+  percentage, 
+  size = 120, 
+  strokeWidth = 8,
+  color = "#4ade80",
+  label,
+  value
+}: {
+  percentage: number
+  size?: number
+  strokeWidth?: number
+  color?: string
+  label: string
+  value: string
+}) {
+  const radius = (size - strokeWidth) / 2
+  const circumference = radius * 2 * Math.PI
+  const offset = circumference - (percentage / 100) * circumference
+  
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="transform -rotate-90">
+          {/* Background circle */}
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="rgba(74, 222, 128, 0.1)"
+            strokeWidth={strokeWidth}
+            fill="transparent"
+          />
+          {/* Progress circle */}
+          <motion.circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={color}
+            strokeWidth={strokeWidth}
+            fill="transparent"
+            strokeLinecap="round"
+            initial={{ strokeDasharray: circumference, strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: offset }}
+            transition={{ duration: 2, ease: "easeOut" }}
+          />
+        </svg>
+        
+        {/* Center content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-lg font-bold text-text-primary">{value}</span>
+          <span className="text-xs text-text-secondary">{label}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function ResultsDisplay({
+  results,
+  onRestart,
+  isAuthenticated = false,
+  onSignUp,
+  onLogin,
+  onOffset,
+  onTrackProgress,
+  onFindFriends
+}: ResultsDisplayProps) {
+  const [shareMenuOpen, setShareMenuOpen] = useState(false)
+  const { toast } = useToast()
+
+  const { total_emissions } = results
+  const comparisons = getComparisonMetrics(total_emissions)
+  
+  // Determine impact level
+  const getImpactLevel = () => {
+    if (total_emissions <= 2000) return { level: 'Excellent', color: '#22c55e', message: 'You have a very low carbon footprint!' }
+    if (total_emissions <= 4000) return { level: 'Good', color: '#84cc16', message: 'Your footprint is below average - well done!' }
+    if (total_emissions <= 8000) return { level: 'Average', color: '#eab308', message: 'Your footprint is typical for your region.' }
+    if (total_emissions <= 12000) return { level: 'High', color: '#f97316', message: 'There\'s significant room for improvement.' }
+    return { level: 'Very High', color: '#ef4444', message: 'Consider major lifestyle changes for the planet.' }
+  }
+
+  const impactLevel = getImpactLevel()
+  
+  // Category data for breakdown
+  const categories = [
+    { 
+      key: 'transport_emissions', 
+      label: 'Transport', 
+      icon: Car, 
+      color: '#ef4444',
+      value: results.transport_emissions
+    },
+    { 
+      key: 'energy_emissions', 
+      label: 'Energy', 
+      icon: Zap, 
+      color: '#f59e0b',
+      value: results.energy_emissions
+    },
+    { 
+      key: 'travel_emissions', 
+      label: 'Aviation', 
+      icon: Plane, 
+      color: '#8b5cf6',
+      value: results.travel_emissions
+    },
+    { 
+      key: 'diet_emissions', 
+      label: 'Diet', 
+      icon: '🍽️', 
+      color: '#22d3ee',
+      value: results.diet_emissions,
+      isEmoji: true
+    },
+    { 
+      key: 'lifestyle_emissions', 
+      label: 'Lifestyle', 
+      icon: '🛒', 
+      color: '#06b6d4',
+      value: results.lifestyle_emissions,
+      isEmoji: true
+    }
+  ].sort((a, b) => b.value - a.value)
+
+  const handleShare = async (platform: string) => {
+    const shareText = `I just calculated my carbon footprint: ${total_emissions.toLocaleString()} kg CO₂/year! 🌍 Join me in tracking climate impact with Ecozync.`
+    const shareUrl = `${window.location.origin}/calculator`
+
+    try {
+      if (platform === 'native' && navigator.share) {
+        await navigator.share({
+          title: 'My Carbon Footprint Results',
+          text: shareText,
+          url: shareUrl
+        })
+      } else {
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`)
+        toast({
+          title: "Copied to clipboard!",
+          description: "Share your results with friends and family.",
+          variant: "success"
+        })
+      }
+    } catch (error) {
+      console.error('Sharing failed:', error)
+    }
+    setShareMenuOpen(false)
+  }
+
+  return (
+    <div className="flex relative flex-col xl:flex-row full-content-height max-w-[1440px] mx-auto w-full">
+      {/* Left Side - Results Summary */}
+      <div className="min-h-[650px] md:min-h-0 p-8 md:p16 flex-1 flex flex-start md:justify-center flex-col px-8 md:px-16 lg:px-24 relative z-10">
+        
+        {/* Main Results */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          className="max-w-lg"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold font-outfit leading-tight mb-4">
+              Your Carbon Footprint
+            </h1>
+            <div className="flex items-baseline space-x-3 mb-4">
+              <span style={{ color: impactLevel.color }}>
+                <AnimatedCounter 
+                  value={total_emissions}
+                  className="text-5xl lg:text-6xl xl:text-7xl font-bold"
+                />
+              </span>
+              <span className="text-2xl text-text-secondary font-mono">kg CO₂/year</span>
+            </div>
+          </motion.div>
+
+          {/* Impact Level */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mb-8"
+          >
+            <div className="inline-flex items-center space-x-3 px-6 py-3 rounded-full border-2"
+              style={{ 
+                borderColor: impactLevel.color + '40',
+                backgroundColor: impactLevel.color + '10'
+              }}
+            >
+              <span className="text-2xl">
+                {impactLevel.level === 'Excellent' && '🌟'}
+                {impactLevel.level === 'Good' && '👍'}
+                {impactLevel.level === 'Average' && '💡'}
+                {impactLevel.level === 'High' && '⚠️'}
+                {impactLevel.level === 'Very High' && '🚨'}
+              </span>
+              <div className="text-left">
+                <p className="font-semibold font-mono text-lg" style={{ color: impactLevel.color }}>
+                  {impactLevel.level} Impact Level
+                </p>
+                <p className="text-sm text-text-secondary font-outfit">{impactLevel.message}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Quick Comparisons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="space-y-4 mb-8"
+          >
+            <div className="flex items-center justify-between text-sm font-mono">
+              <span className="text-text-secondary">vs EU Average</span>
+              <span className={`font-semibold ${comparisons.vsEuAverage > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                {comparisons.vsEuAverage > 0 ? '+' : ''}{Math.round(comparisons.vsEuAverage)}%
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm font-mono">
+              <span className="text-text-secondary">Trees needed for offset</span>
+              <span className="font-semibold text-accent-cyan">{comparisons.treesToOffset} trees</span>
+            </div>
+            <div className="flex items-center justify-between text-sm font-mono">
+              <span className="text-text-secondary">Paris Climate Target</span>
+              <span className={`font-semibold ${total_emissions <= 2300 ? 'text-green-400' : 'text-red-400'}`}>
+                {total_emissions <= 2300 ? '✓ On track' : '× Above target'}
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-3"
+          >
+            <Button
+              onClick={onRestart}
+              className="bg-accent-green hover:bg-accent-green/90 text-primary-dark font-medium px-6"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Calculate Again
+            </Button>
+            <Button
+              onClick={() => setShareMenuOpen(true)}
+              variant="outline"
+              className="border-accent-green/50 text-text-secondary hover:text-text-secondary hover:bg-accent-green/10 px-6"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Share Results
+            </Button>
+          </motion.div>
+        </motion.div>
+
+        {/* Circular Text - Visual Element */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="absolute z-[-10] bottom-[-8px] md:bottom-0 md:top-16 lg:top-16 right-0 lg:right-8"
+        >
+          <div className="relative">
+            <CircularText 
+              text="RESULTS ✦ IMPACT ✦ ACTION ✦ CHANGE ✦ "
+              spinDuration={25}
+              onHover="speedUp"
+              className="w-30 h-30 md:w-32 md:h-32 lg:w-48 lg:h-48 text-accent-green"
+            />
+            {/* Center star */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.span 
+                className="text-3xl lg:text-4xl text-accent-green"
+                animate={{ 
+                  rotate: [0, 360],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  rotate: { duration: 6, repeat: Infinity, ease: "linear" },
+                  scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                }}
+              >
+                ✦
+              </motion.span>
+            </div>
+          </div>
+        </motion.div>
+
+      </div>
+
+      {/* Right Side - Detailed Breakdown */}
+      <div className="flex-1 flex items-center justify-center p-8 lg:p-16">
+        <div className="w-full max-w-2xl space-y-6">
+          
+          {/* Emissions Breakdown */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <Card className="bg-surface-dark/80 backdrop-blur-sm border-accent-green/20 p-6">
+              <h3 className="text-2xl font-bold font-outfit text-text-primary mb-6">
+                Emissions Breakdown
+              </h3>
+
+              <div className="space-y-4">
+                {categories.map((category, index) => (
+                  <motion.div
+                    key={category.key}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + index * 0.1 }}
+                    className="flex items-center space-x-4"
+                  >
+                    <div className="flex-shrink-0">
+                      {category.isEmoji ? (
+                        <span className="text-2xl">{category.icon}</span>
+                      ) : (
+                        <category.icon className="w-6 h-6" style={{ color: category.color }} />
+                      )}
+                    </div>
+                    
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium text-text-primary font-mono">{category.label}</span>
+                        <div className="text-right">
+                          <AnimatedCounter 
+                            value={category.value}
+                            suffix=" kg"
+                            className="font-mono text-lg text-text-primary"
+                          />
+                          <span className="text-text-secondary text-sm ml-2 font-mono">
+                            ({Math.round((category.value / total_emissions) * 100)}%)
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="h-2 bg-surface-darker rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full"
+                          style={{ backgroundColor: category.color }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(category.value / total_emissions) * 100}%` }}
+                          transition={{ duration: 1.2, delay: 0.2 + index * 0.1 }}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Action Cards */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {/* Compact Action Cards Row */}
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {/* Offset CTA */}
+              <Card className="bg-surface-dark/80 backdrop-blur-sm border-accent-green/20 p-4 text-center relative overflow-hidden">
+                <TreePine className="w-6 h-6 text-accent-green mx-auto mb-2" />
+                <h5 className="font-medium text-text-primary text-sm mb-1 font-outfit">Offset Impact</h5>
+                <p className="text-text-secondary text-xs font-mono">
+                  {Math.ceil(total_emissions / 1000)} tonnes
+                </p>
+              </Card>
+
+              {/* Track Progress */}
+              <Card className="bg-surface-dark/80 backdrop-blur-sm border-accent-cyan/20 p-4 text-center">
+                <Target className="w-6 h-6 text-accent-cyan mx-auto mb-2" />
+                <h5 className="font-medium text-text-primary text-sm mb-1 font-outfit">Track Progress</h5>
+                <p className="text-text-secondary text-xs font-mono">
+                  Monitor goals
+                </p>
+              </Card>
+
+              {/* Join Community */}
+              <Card className="bg-surface-dark/80 backdrop-blur-sm border-accent-green/20 p-4 text-center">
+                <Users className="w-6 h-6 text-accent-green mx-auto mb-2" />
+                <h5 className="font-medium text-text-primary text-sm mb-1 font-outfit">Join Community</h5>
+                <p className="text-text-secondary text-xs font-mono">
+                  Compete with friends
+                </p>
+              </Card>
+            </div>
+
+            {/* Single Sign Up Button */}
+            {!isAuthenticated && (
+              <Button 
+                onClick={onSignUp}
+                className="w-full bg-accent-green hover:bg-accent-green/90 text-primary-dark font-medium"
+              >
+                Sign Up to Unlock Features
+              </Button>
+            )}
+          </motion.div>
+        </div>
+      </div>
+
+
+      {/* Share Menu Modal */}
+      {shareMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 bg-primary-dark/90 backdrop-blur-md flex items-center justify-center z-50"
+          onClick={() => setShareMenuOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Card className="bg-surface-dark/95 backdrop-blur-sm border-accent-green/30 shadow-xl p-6 m-4 max-w-sm w-full rounded-xl">
+              <div className="text-center mb-6">
+                <h4 className="text-lg font-semibold text-text-primary mb-2 font-outfit">
+                  Share Your Results
+                </h4>
+                <p className="text-sm text-text-secondary font-mono opacity-80">
+                  Spread awareness about carbon footprints
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <Button
+                  onClick={() => handleShare('native')}
+                  className="group w-full justify-start bg-accent-green/15 border-2 border-accent-green/30 text-text-primary hover:text-text-secondary hover:bg-accent-green/25 hover:border-accent-green/50 hover:scale-[1.02] hover:shadow-lg hover:shadow-accent-green/20 active:scale-[0.98] transition-all duration-300 h-12 font-medium rounded-lg"
+                >
+                  <Share2 className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-outfit">Share via Apps</span>
+                </Button>
+                <Button
+                  onClick={() => handleShare('copy')}
+                  variant="outline"
+                  className="group w-full justify-start bg-surface-darker/30 border-2 border-accent-green/20 text-text-primary hover:bg-accent-green/10 hover:border-accent-green/40 hover:text-text-secondary hover:scale-[1.02] hover:shadow-lg hover:shadow-accent-green/10 active:scale-[0.98] transition-all duration-300 h-12 font-medium rounded-lg"
+                >
+                  <Download className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-outfit">Copy Link</span>
+                </Button>
+              </div>
+              
+              {/* Subtle decorative element */}
+              <div className="mt-6 pt-4 border-t border-accent-green/20">
+                <p className="text-xs text-text-secondary text-center font-mono">
+                  Help others track their climate impact ✨
+                </p>
+              </div>
+            </Card>
+          </motion.div>
+        </motion.div>
+      )}
+    </div>
+  )
+}

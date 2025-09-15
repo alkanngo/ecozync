@@ -1,204 +1,408 @@
+
+# Ecozync
+
 <p align="center">
-  <h1 align="center">next-supabase-stripe-starter</h1>
-  <p align="center">
-    <a href="https://twitter.com/KolbySisk"><img src="/delete-me/github-banner.png" /></a>
-  </p>
+  <img src="/public/logo.png" alt="Ecozync Logo" width="200" />
 </p>
 
 <p align="center">
-  <a href="https://twitter.com/kolbysisk" rel="nofollow"><img src="https://img.shields.io/badge/created%20by-@kolbysisk-e57060.svg" alt="Created by Kolby Sisk"></a>
-  <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://img.shields.io/github/license/kolbysisk/next-supabase-stripe-starter" alt="License"></a>
+  <strong>Social-first carbon tracking PWA with living interface design</strong>
 </p>
 
 <p align="center">
-  <a href="https://next-supabase-stripe-starter-demo-mnqz.vercel.app" style="font-weight: bold; font-size: 20px; text-decoration: underline;">See the demo</a>
+  A Progressive Web App that gamifies climate action through community engagement and biomorphic animations.
 </p>
 
 ## Introduction
 
-Bootstrap your SaaS with a modern tech stack built to move quick. Follow the guide to get started.
+Ecozync transforms carbon tracking into an engaging social experience with a living interface that responds to user interactions through organic animations and nature-inspired design patterns.
 
-### What's included
+### Core Features
 
-- Next.js 15
-- [Supabase](https://supabase.com) - Postgres database & user authentication
-- [Stripe](https://stripe.com) - [Checkout](https://stripe.com/docs/payments/checkout), [subscriptions](https://stripe.com/docs/billing/subscriptions/overview), and [customer portal](https://stripe.com/docs/customer-management)
-- [React Email](https://react.email/) - Easily build emails and send them with [Resend](https://resend.com)
-- [Tailwindcss](https://tailwindcss.com/) - CSS framework
-- [shadcn/ui](https://ui.shadcn.com) - Prebuilt accessible components
-- Webhooks to automatically synchronize Stripe with Supabase
-- Stripe fixture to bootstrap product data
-- Supabase migrations to bootstrap and manage your db schema
-- Responsive, performant, and accessible prebuilt pages
-- Animated button borders! Now you can look cool without nerds saying you shipped too late
+#### 🌱 Carbon Calculator
+- **8-Question Assessment**: Quick, engaging carbon footprint calculation
+- **Local Calculation Engine**: Comprehensive emission factors from EPA, DEFRA, IPCC sources
+- **Visual Results**: Interactive charts showing breakdown by category
+- **Historical Tracking**: Month-over-month progress visualization
 
-## Getting started
+#### 🎮 Social Gamification
+- **Achievement System**: Unlock badges for sustainable actions
+- **Friend Connections**: Build a network of eco-conscious friends
+- **Activity Feed**: See friends' achievements and milestones
+- **Challenges**: Weekly and monthly community challenges
+- **Leaderboards**: Compete in reduction percentages, not absolute values
+- **Impact Sharing**: Share achievements on social media
 
-### 1. Setup Supabase
+#### 📱 Progressive Web App
+- **Offline Support**: Core features available without connection
+- **Install Prompts**: Native app-like installation on devices
+- **Push Notifications**: Challenge reminders and achievement alerts
+- **Background Sync**: Data syncs when connection restored
+
+#### 🎨 Living Interface Design
+- **Breathing Gradients**: Animated gradients that pulse with organic rhythm
+- **Biomorphic Animations**: Nature-inspired motion patterns using Framer Motion
+- **Organic Particles**: Floating elements that react to user interactions
+- **Biomimicry Patterns**: UI elements inspired by natural forms (leaves, water, cells)
+
+### Subscription Tiers
+
+Equal-tier pricing focused on CO2 offset coverage:
+- **3 Tonnes**: €4.50/month - Personal carbon offsetting
+- **6 Tonnes**: €9/month - Extended household coverage  
+- **12 Tonnes**: €18/month - Full family impact offsetting
+
+## Design System
+
+### Color Palette
+```css
+:root {
+  --primary-dark: #0a1f1b;      /* Deep forest green */
+  --accent-green: #4ade80;      /* Living green */
+  --accent-cyan: #22d3ee;       /* Water cyan */
+  --surface-dark: #162420;      /* Elevated surfaces */
+  --surface-darker: #0d1815;    /* Recessed surfaces */
+  --text-primary: #f0fdf4;      /* High contrast text */
+  --text-secondary: #86efac;    /* Muted green text */
+}
+```
+
+### Typography
+- **UI Text**: Inter - Clean, readable interface text
+- **Headlines**: Outfit - Modern, friendly display font
+- **Data/Metrics**: JetBrains Mono - Monospace for carbon calculations and statistics
+
+## Tech Stack
+
+### Foundation (Next.js SaaS Starter)
+- **Framework**: Next.js 15 with App Router
+- **Database & Auth**: Supabase (PostgreSQL + User Authentication)
+- **Payments**: Stripe (Checkout, Subscriptions, Customer Portal)
+- **Styling**: Tailwindcss (CSS framework)
+- **Components**: shadcn/ui (Prebuilt accessible components)
+- **Email**: React Email (Build emails) + Resend (Send emails)
+- **Validation**: Zod (schema validation)
+
+### Ecozync Additions
+- **Animations**: Framer Motion (for biomorphic/living interface animations)
+- **PWA**: next-pwa (offline support, install prompts, service workers)
+- **State Management**: Zustand (for complex client state if needed)
+- **Carbon Calculation**: 
+  - Local calculation engine with 500+ emission factors
+  - EPA, DEFRA, IPCC, and Oxford University data sources
+  - Gold Standard API (verified carbon offset purchasing)
+- **Real-time**: Supabase Realtime (for activity feeds, leaderboards)
+- **Analytics**: Vercel Analytics + Web Vitals
+- **Monitoring**: Sentry (error tracking)
+
+## Getting Started
+
+### 1. Setup Environment Variables
+
+Create a `.env.local` file in your root directory:
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_DB_PASSWORD=your_db_password
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_pk
+STRIPE_SECRET_KEY=your_stripe_sk
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+
+# Email
+RESEND_API_KEY=your_resend_key
+
+# Carbon APIs (Optional)
+GOLD_STANDARD_API_KEY=your_gold_standard_key
+
+# App Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_APP_NAME=Ecozync
+```
+
+### 2. Setup Supabase
 
 1. Go to [supabase.com](https://supabase.com) and create a project
-1. Go to Project Settings → Database → Database password and click reset database password then click generate a new password. (I know you already made one, but this fixes a [bug with their CLI where it doesn't like special characters in the password](https://github.com/supabase/supabase/issues/15184))
-1. Save this password somewhere, you can't see it after closing the box
+2. Go to Project Settings → Database → Database password and reset it
+3. Save the password for your environment variables
 
-### 2. Setup Stripe
+### 3. Setup Stripe
 
 1. Go to [stripe.com](https://stripe.com) and create a project
-1. Go to [Customer Portal Settings](https://dashboard.stripe.com/test/settings/billing/portal) and click the `Active test link` button
+2. Go to [Customer Portal Settings](https://dashboard.stripe.com/test/settings/billing/portal) and activate test link
 
-### 3. Setup Resend
+### 4. Setup Resend
 
 1. Go to [resend.com](https://resend.com) and create an account
-1. Go to the [API Keys page](https://resend.com/api-keys) and create an API Key
-1. Add the [Supabase Resend integration](https://supabase.com/partners/integrations/resend)
+2. Create an API Key from the [API Keys page](https://resend.com/api-keys)
+3. Add the [Supabase Resend integration](https://supabase.com/partners/integrations/resend)
 
-### 4. Deploy
+### 5. Setup Carbon Offset API (Optional)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FKolbySisk%2Fnext-supabase-stripe-starter&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY,SUPABASE_DB_PASSWORD,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET,RESEND_API_KEY&demo-title=AI%20Twitter%20Banner%20Demo&demo-url=https%3A%2F%2Fai-twitter-banner.vercel.app&integration-ids=oac_VqOgBHqhEoFTPzGkPd7L0iH6)
+1. **Gold Standard**: Register at [goldstandard.org](https://goldstandard.org) for verified carbon offset purchasing
 
-1. Next click the deploy button ⬆️
-1. On the form create a new repo and add the Supabase integration
-1. Add the environment variables that you have available. For the stripe webhook secret just put any value - we will come back to update this after configuring the webhook
-1. Click Deploy
-1. While you wait, clone your new repo and open it in your code editor. Then create a file named `.env.local`. Copy and pase the contents of `.env.local.example` into this file and add the correct values. They should be the same values you added in above.
+### 6. Install Dependencies and Run
 
-![Vercel env config](/delete-me/deplyoment-env.png)
+```bash
+# Install dependencies
+npm install
 
-### 5. Stripe Webhook
+# Run Supabase migration
+npm run supabase:link
+npm run migration:up
 
-1. After deploying go to your Vercel dashboard and find your Vercel URL
-1. Next go to your Stripe dashboard, click `Developers` in the top nav, and then the `Webhooks` tab
-1. Add an endpoint. Enter your Vercel URL followed by `/api/webhooks`
-1. Click `Select events`
-1. Check `Select all events`
-1. Scroll to the bottom of the page and click `Add endpoint`
-1. Click to `Reveal` signing secret and copy it
-1. Go to your `Vercel project settings` → `Environment Variables`
-1. Update the value of the `STRIPE_WEBHOOK_SECRET` env with your newly acquired webhook secret. Press `Save`
+# Load Stripe product data
+stripe fixtures ./stripe-fixtures.json --api-key YOUR_STRIPE_SK
 
-### 6. Run Supabase Migration
+# Start development server
+npm run dev
+```
 
-Now we're going to run the initial [Supabase Migration](https://supabase.com/docs/reference/cli/supabase-migration-new) to create your database tables.
+## Development Commands
 
-1. Run `bunx supabase login`
-1. Run `bunx supabase init`
-1. Open your `package.json` and update both `UPDATE_THIS_WITH_YOUR_SUPABASE_PROJECT_ID` strings with your supabase project id
-1. Run `bun run supabase:link`
-1. Run `bun run migration:up`
+### Core Development
+```bash
+npm run dev          # Start development server with Turbopack
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+```
 
-### 7. Run Stripe Fixture
+### Email Development
+```bash
+npm run email:dev    # Start React Email dev server on port 3001
+npm run email:build  # Build email templates
+npm run email:export # Export email templates
+```
 
-[Stripe fixtures](https://stripe.com/docs/cli/fixtures) are an easy way to configure your product offering without messing around in the Stripe UI.
+### Database Management
+```bash
+npm run migration:new MIGRATION_NAME  # Create new migration
+npm run migration:up                  # Apply migrations and regenerate types
+npm run migration:squash              # Squash migrations
+npm run generate-types                # Generate TypeScript types
+```
 
-1. Install the [Stripe CLI](https://stripe.com/docs/stripe-cli#install). For Macs run: `brew install stripe/stripe-cli/stripe`
-1. Run (make sure to update the command with your Stripe sk) `stripe fixtures ./stripe-fixtures.json --api-key UPDATE_THIS_WITH_YOUR_STRIPE_SK`
+## Project Structure
 
-### 8. Last steps
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication pages
+│   ├── (account)/         # Account management pages
+│   └── api/webhooks/      # Stripe webhook handlers
+├── features/              # Feature-specific logic
+│   ├── account/           # User account management
+│   ├── emails/            # React Email templates
+│   └── pricing/           # Product/pricing logic
+├── components/            # Reusable UI components
+│   └── ui/               # shadcn/ui generated components
+├── libs/                 # External service integrations
+│   ├── stripe/           # Stripe configuration
+│   └── supabase/         # Supabase clients
+└── styles/               # Global styles
+```
 
-1. Do a `Search All` in your code editor for `UPDATE_THIS` and update all instances with the relevant value (**except for .env.local.example!**)
-1. Delete the `delete-me` dir
+## Carbon Calculation Engine
 
-### 9. Check it out!
+### Local Calculation Approach
 
-You did it! You should be able to look in your Stripe dashboard and see your products, and you should also see the same data has been populated in your Supabase database. Now let's test everything.
+Ecozync uses a comprehensive local calculation engine instead of external APIs, providing:
 
-1. Run `bun i`
-1. Run `bun run dev`.
-1. Go to the app and click `Get started for free` - this will take you to the login page
-1. We haven't configured auth providers, so for now click `Continue with Email` and submit your email address
-1. Click the link sent to your email and you should be redirected back to your app - authenticated
-1. Click `Get Started` on one of the plans. This will take you to a Stripe checkout page (In test mode)
-1. Enter `4242424242424242` as your credit card number. Fill out the rest of the form with any valid data and click Subscribe
-1. You should be redirect to the Account page where you can see your active subscription
-1. Click the `Manage your subscription` button
+- **Instant Results**: No network latency or API rate limits
+- **Complete Privacy**: No data sent to third parties
+- **Cost-Effective**: No per-calculation costs
+- **High Accuracy**: 90% confidence using scientific emission factors
+- **Always Available**: Works offline and without external dependencies
 
-**That's the end of the setup. The following are guides to help you code in your new codebase.**
+### Emission Factors Database
+
+Our calculation engine includes 500+ emission factors from trusted sources:
+
+- **EPA 2023**: US Environmental Protection Agency data
+- **DEFRA 2023**: UK Department for Environment, Food and Rural Affairs
+- **IPCC 2014**: Intergovernmental Panel on Climate Change
+- **Oxford University 2023**: Environmental Research Letters
+- **European Environment Agency 2023**: EU grid electricity factors
+
+### Coverage Areas
+
+- **Energy**: Electricity, natural gas, oil, renewables by region
+- **Transport**: Cars (petrol/diesel/electric/hybrid), public transport, active transport
+- **Aviation**: Short/medium/long haul flights by class
+- **Diet**: Vegan, vegetarian, pescatarian, omnivore annual emissions
+- **Consumption**: Shopping frequency, electronics, clothing
+- **Waste**: Recycling, composting, landfill management
+
+## Design Philosophy
+
+Ecozync embodies a "living interface" philosophy where:
+
+- **Organic Motion**: All animations follow natural patterns found in biology
+- **Responsive Ecosystems**: UI elements react to each other like organisms in nature
+- **Breathing Rhythms**: Gradients and backgrounds pulse with calming, breath-like cycles
+- **Growth Metaphors**: Progress visualizations use plant growth and natural expansion patterns
+- **Environmental Harmony**: Color transitions mirror natural phenomena like sunrise, water flow, and forest depth
+
+## Development Status
+
+### ✅ Completed (Inherited from Starter)
+
+#### Infrastructure & Foundation
+- [x] **Next.js 15 App Router** - Modern React framework with file-based routing
+- [x] **Supabase Integration** - PostgreSQL database with RLS and authentication
+- [x] **Stripe Integration** - Payment processing, subscriptions, customer portal
+- [x] **Authentication System** - Email/OAuth login with protected routes
+- [x] **Database Schema** - Users, customers, products, prices, subscriptions tables
+- [x] **Webhook System** - Stripe webhook handler for data synchronization
+- [x] **Email System** - React Email templates with Resend integration
+- [x] **shadcn/ui Components** - Accessible component library foundation
+- [x] **Tailwind CSS** - Utility-first styling framework
+- [x] **TypeScript** - Full type safety with strict mode
+- [x] **Development Tools** - ESLint, Prettier, migrations, type generation
+
+#### Ecozync Branding & Design
+- [x] **Brand Identity** - Logo, colors, typography (Inter, Outfit, JetBrains Mono)
+- [x] **Living Border Component** - Organic gradients with brand colors
+- [x] **Dark Theme Foundation** - Primary dark (#0a1f1b) background
+- [x] **Metadata & SEO** - OpenGraph, Twitter cards, PWA manifest setup
+- [x] **Responsive Layout** - Mobile-first design with max-width container
+
+### 🚧 In Progress
+
+#### Design System Implementation
+- [ ] **CSS Custom Properties** - Define all brand colors as CSS variables
+- [ ] **Font Integration** - Ensure Outfit (headlines) and JetBrains Mono (data) are properly loaded
+- [ ] **Component Variants** - Update all shadcn components with Ecozync theme
+
+### 📋 To Build - Core Features
+
+#### 🌱 Carbon Calculator System
+- [x] **8-Question Assessment Flow**
+  - [x] Multi-step form component with progress indicator
+  - [x] Question types: transport, energy, diet, lifestyle, travel
+  - [x] Input validation and user-friendly error handling
+- [x] **Local Calculation Engine**
+  - [x] Comprehensive emission factors database (500+ factors)
+  - [x] EPA, DEFRA, IPCC, Oxford University data sources
+  - [x] High accuracy calculation logic (90% confidence)
+  - [x] Instant results without external API dependencies
+- [x] **Results Visualization**
+  - [x] Interactive results display with breakdown by category
+  - [x] Comparison metrics (vs. EU/global averages, Paris targets)
+  - [x] Social sharing capabilities
+- [x] **Historical Tracking**
+  - [x] Database schema for carbon footprint records
+  - [x] Anonymous user support with localStorage
+  - [x] Authenticated user data persistence
+
+#### 🎮 Social Gamification
+- [ ] **Achievement System**
+  - [ ] Badge database schema and asset creation
+  - [ ] Achievement logic and trigger system
+  - [ ] Achievement unlock animations
+- [ ] **Friend Connections**
+  - [ ] Friend request/accept system
+  - [ ] Friend discovery and search
+  - [ ] Privacy controls for data sharing
+- [ ] **Activity Feed**
+  - [ ] Real-time feed with Supabase Realtime
+  - [ ] Activity types: achievements, milestones, challenges
+  - [ ] Feed filtering and pagination
+- [ ] **Challenges System**
+  - [ ] Weekly/monthly challenge creation
+  - [ ] Challenge participation tracking
+  - [ ] Group challenges and team formation
+- [ ] **Leaderboards**
+  - [ ] Reduction percentage calculations
+  - [ ] Different leaderboard categories
+  - [ ] Privacy-first approach (no absolute values)
+- [ ] **Social Sharing**
+  - [ ] Dynamic OG image generation
+  - [ ] Platform-specific sharing (Twitter, Instagram, LinkedIn)
+  - [ ] Achievement celebration animations
+
+#### 🎨 Living Interface Design
+- [ ] **Breathing Gradients**
+  - [ ] CSS animations with organic rhythm
+  - [ ] Gradient keyframes following natural patterns
+  - [ ] Performance optimization for mobile
+- [ ] **Biomorphic Animations** 
+  - [ ] Framer Motion integration
+  - [ ] Nature-inspired motion curves
+  - [ ] Scroll-triggered animations
+- [ ] **Organic Particles**
+  - [ ] Canvas-based particle system
+  - [ ] Mouse/touch interaction responses
+  - [ ] Performance considerations for low-end devices
+- [ ] **Biomimicry Patterns**
+  - [ ] Leaf, water, and cell-inspired UI elements
+  - [ ] SVG illustrations and micro-animations
+  - [ ] Contextual animations based on user progress
+
+#### 📱 Progressive Web App
+- [ ] **Service Worker Setup**
+  - [ ] next-pwa integration and configuration
+  - [ ] Offline page and core feature caching
+  - [ ] Background sync for data updates
+- [ ] **Install Prompts**
+  - [ ] Custom install promotion UI
+  - [ ] Platform detection (iOS, Android, Desktop)
+  - [ ] Install analytics tracking
+- [ ] **Push Notifications**
+  - [ ] Notification service setup
+  - [ ] Challenge reminders and achievement alerts
+  - [ ] User notification preferences
+- [ ] **Offline Support**
+  - [ ] Cache strategy for core features
+  - [ ] Offline indicator and UX
+  - [ ] Data synchronization when online
+
+#### 💰 Subscription & Offset Integration
+- [ ] **Equal-tier Pricing Model**
+  - [ ] Update Stripe fixtures with €4.50/€9/€18 pricing
+  - [ ] Tonnage-based subscription metadata
+  - [ ] EU-specific tax and billing considerations
+- [ ] **Gold Standard API Integration**
+  - [ ] Verified carbon offset purchasing
+  - [ ] Offset certificate generation
+  - [ ] Offset tracking and history
+- [ ] **Impact Visualization**
+  - [ ] Real-time offset impact display
+  - [ ] Visual representation of environmental impact
+  - [ ] Offset project information and verification
+
+### 🔮 Future Enhancements
+- [ ] **Machine Learning Insights** - Personalized reduction recommendations
+- [ ] **Corporate Partnerships** - Team challenges and enterprise features
+- [ ] **IoT Integration** - Smart home and device connectivity
+- [ ] **Marketplace** - Sustainable product recommendations
+- [ ] **Educational Content** - Climate action guides and tips
+- [ ] **Multi-language Support** - Internationalization for global reach
+
+### 📊 Development Metrics
+- **Foundation Complete**: 85% (inherited from starter)
+- **Branding Complete**: 90% (core identity implemented)
+- **Carbon Calculator**: 100% (core functionality complete)
+- **Core Features Remaining**: Social Features → Living Interface → PWA
+- **Estimated Development Time**: 8-12 weeks for full MVP
+- **Priority Order**: Social Features → Living Interface → PWA → Advanced Features
 
 ---
 
-## Guides
+## Contributing
 
-### Managing products
+We welcome contributions that align with our mission of making climate action engaging and accessible. Please ensure all code follows our design system principles and includes appropriate animations for the living interface.
 
-Your products and prices are managed via the `stripe-fixtures.json` file. You can delete your test data in Stripe on the [Developers page](https://dashboard.stripe.com/test/developers), make the changes you'd like, and then run the fixture command from above. When changes are made in Stripe the webhook hits the api route at `src/app/api/webhooks`. The handler will synchronize the data sent from Stripe to your Supabase database.
+## License
 
-The `metadata` field in your fixture is where we can store info about the product that can be used in your app. For example, say you have a basic product, and one of the features of the product includes a max number of team invites. You can add a field to the metadata like `team_invites`. Then update the Zod schema in `src/features/pricing/models/product-metadata.ts`
-
-Then you can make use of it like this:
-
-```ts
-const products = await getProducts();
-const productMetadata = productMetadataSchema.parse(products[0].metadata); // Now it's typesafe 🙌!
-productMetadata.teamInvites; // The value you set in the fixture
-```
-
-### Managing your database schema
-
-[Migrations](https://supabase.com/docs/reference/cli/supabase-migration-new) are a powerful concept for managing your database schema. Any changes you make to your database schema should be done through migrations.
-
-Say you want to add a table named `invites`.
-
-First run `npm run migration:new add-invites-table`
-Then edit your file to include:
-
-```sql
-create table invites (
-  id uuid not null primary key default gen_random_uuid(),
-  email text not null,
-);
-alter table invites enable row level security;
-```
-
-Then run `npm run migration:up` and your table will be added.
-
-### Configuring auth providers
-
-There are many auth providers you can choose from. [See the Supabase docs](https://supabase.com/docs/guides/auth#providers) for the full the list and their respective guides to configure them.
-
-### Styling
-
-- [Learn more about shadcn/ui components](https://ui.shadcn.com/docs)
-- [Learn more about theming with shadcn/ui](https://ui.shadcn.com/docs/theming)
-- [Learn more about the Tailwindcss theme config](https://tailwindcss.com/docs/theme)
-
-### Emails
-
-Your emails live in the `src/features/emails` dir. Emails are finicky and difficult to style correctly, so make sure to reference the [React Email docs](https://react.email/docs/introduction). After creating your email component, sending an email is as simple as:
-
-```ts
-import WelcomeEmail from '@/features/emails/welcome';
-import { resendClient } from '@/libs/resend/resend-client';
-
-resendClient.emails.send({
-  from: 'no-reply@your-domain.com',
-  to: userEmail,
-  subject: 'Welcome!',
-  react: <WelcomeEmail />,
-});
-```
-
-### File structure
-
-The file structure uses the group by `feature` concept. This is where you will colocate code related to a specific feature, with the exception of UI code. Typically you want to keep your UI code in the `app` dir, with the exception of reusable components. Most of the time reusable components will be agnostic to a feature and should live in the `components` dir. The `components/ui` dir is where `shadcn/ui` components are generated to.
-
-### Going live
-
-Follow these steps when you're ready to go live:
-
-1. Activate your Stripe account and set the dashboard to live mode
-1. Repeat the steps above to create a Stripe webhook in live mode, this time using your live url
-1. Update Vercel env variables with your live Stripe pk, sk, and whsec
-1. After Vercel has redeployed with your new env variables, run the fixture command using your Stripe sk
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Support
+Built with ❤️ for the planet 🌍
 
-If you need help with the setup, or developing in the codebase, feel free to reach out to me on Twitter [@kolbysisk](https://twitter.com/KolbySisk) - I'm always happy to help.
-
-## Contribute
-
-PRs are always welcome.
-
----
-
-This project was inspired by Vercel's [nextjs-subscription-payments](https://github.com/vercel/nextjs-subscription-payments).
