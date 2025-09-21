@@ -1,23 +1,25 @@
-import { NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
 import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+
+import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
 
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function GET(request: Request, context: RouteContext) {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const calculationId = context.params.id
+    const params = await context.params
+    const calculationId = params.id
 
     // Fetch specific calculation
     const { data, error } = await supabase
@@ -45,14 +47,15 @@ export async function GET(request: Request, context: RouteContext) {
 
 export async function PUT(request: Request, context: RouteContext) {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const calculationId = context.params.id
+    const params = await context.params
+    const calculationId = params.id
     const updateData = await request.json()
 
     // Remove fields that shouldn't be updated
@@ -88,14 +91,15 @@ export async function PUT(request: Request, context: RouteContext) {
 
 export async function DELETE(request: Request, context: RouteContext) {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const calculationId = context.params.id
+    const params = await context.params
+    const calculationId = params.id
 
     // Delete calculation
     const { error } = await supabase

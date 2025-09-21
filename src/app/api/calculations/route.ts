@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
 import { cookies } from 'next/headers'
-import type { CarbonCalculation } from '../../../types/database'
+import { NextResponse } from 'next/server'
+
+import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
+import type { CarbonCalculation } from '@/libs/supabase/types'
 
 interface PaginatedResponse<T> {
   data: T[]
@@ -22,7 +23,7 @@ interface CalculationFilters {
 
 export async function GET(request: Request) {
   try {
-    const supabase = createSupabaseServerClient()
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
@@ -99,8 +100,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+    const supabase = await createSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {

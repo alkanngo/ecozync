@@ -1,4 +1,4 @@
-import type { AssessmentData,CarbonCalculationInsert } from '../../../types/database'
+import type { AssessmentData, CarbonCalculationInsert } from '@/libs/supabase/types'
 
 import { 
   EMISSION_FACTORS, 

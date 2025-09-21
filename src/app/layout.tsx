@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Leaf } from 'lucide-react';
 
 import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/contexts/auth-context';
 import { cn } from '@/utils/cn';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -87,15 +88,17 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en'>
       <body className={cn('font-sans antialiased bg-[#0a1f1b] text-[#f0fdf4]', batamy.variable, outfit.variable, jetbrainsMono.variable)}>
-        <div className='m-auto flex h-full flex-col'>
-            <AppBar />
-            <main className='relative flex-1'>
-              <div className='relative h-full'>{children}</div>
-            </main>
-            <Footer />
-        </div>
-            <Toaster />
-            <Analytics />
+        <AuthProvider>
+          <div className='m-auto flex h-full flex-col'>
+              <AppBar />
+              <main className='relative flex-1'>
+                <div className='relative h-full'>{children}</div>
+              </main>
+              <Footer />
+          </div>
+              <Toaster />
+              <Analytics />
+        </AuthProvider>
       </body>
     </html>
   );

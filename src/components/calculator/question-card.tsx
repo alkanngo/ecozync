@@ -89,60 +89,61 @@ export default function QuestionCard({
 
   // Mobile layout
   if (mobile) {
-    return (
-      <motion.div
-        variants={cardVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
+  return (
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      
+      exit="exit"
         className="w-full"
       >
         {/* Custom Input */}
         {customInput && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
             className="mb-4"
-          >
-            {customInput}
-          </motion.div>
-        )}
+            >
+              {customInput}
+            </motion.div>
+          )}
 
         {/* Options - Mobile Stacked */}
-        {options.length > 0 && (
+          {options.length > 0 && (
           <div className="space-y-3">
-            {options.map((option, index) => (
-              <motion.div
-                key={option.value}
-                custom={index}
-                variants={optionVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <Button
-                  variant="outline"
-                  onClick={() => handleOptionClick(option.value)}
+              {options.map((option, index) => (
+                <motion.div
+                  key={option.value}
+                  custom={index}
+                  variants={optionVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Button
+                    variant="outline"
+                    onClick={() => handleOptionClick(option.value)}
                   className={`w-full h-auto p-4 relative transition-all duration-300 ${
-                    isSelected(option.value)
+                      isSelected(option.value)
                       ? 'bg-accent-green/20 border-accent-green text-text-primary ring-2 ring-accent-green/50'
                       : 'bg-surface-darker/30 border-accent-green/20 text-text-secondary hover:bg-accent-green/10 hover:border-accent-green/40 hover:text-text-primary'
-                  }`}
-                >
+                    }`}
+                  >
                   <div className="flex items-center space-x-3 w-full">
-                    {/* Icon */}
-                    {option.icon && (
-                      <motion.div
+                      {/* Icon */}
+                      {option.icon && (
+                        <motion.div
                         className="text-2xl flex-shrink-0"
-                        animate={{
-                          scale: isSelected(option.value) ? [1, 1.1, 1] : 1,
-                        }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        {option.icon}
-                      </motion.div>
-                    )}
-                    
+                          animate={{
+                            scale: isSelected(option.value) ? [1, 1.1, 1] : 1,
+                          }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          {option.icon}
+                        </motion.div>
+                      )}
+                      
                     <div className="flex-1 text-left">
                       {/* Label */}
                       <h3 className="font-semibold text-base mb-1 font-outfit">
@@ -168,10 +169,10 @@ export default function QuestionCard({
                       </motion.div>
                     )}
                   </div>
-                </Button>
-              </motion.div>
-            ))}
-          </div>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
         )}
       </motion.div>
     )

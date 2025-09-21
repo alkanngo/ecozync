@@ -1,5 +1,7 @@
 // Local storage utilities for anonymous users
-import type { AssessmentData, EmissionCalculation } from './calculation-engine'
+import type { AssessmentData } from '@/libs/supabase/types'
+
+import type { EmissionCalculation } from './calculation-engine'
 
 const STORAGE_KEYS = {
   ASSESSMENT_DATA: 'ecozync_assessment_data',

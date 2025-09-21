@@ -12,8 +12,8 @@ import ResultsDisplay from '@/components/calculator/results-display'
 import { Button } from '@/components/ui/button'
 import CircularText from '@/components/ui/circular-text'
 import { useToast } from '@/components/ui/use-toast'
+import type { AssessmentData, CarbonCalculationInsert } from '@/libs/supabase/types'
 
-import type { AssessmentData, CarbonCalculationInsert } from '../../../types/database'
 import { saveCalculation } from '../../app/calculator/actions'
 
 interface CalculatorFormProps {
@@ -283,6 +283,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
     return (
       <ResultsDisplay 
         results={results}
+        assessmentData={assessmentData}
         onRestart={restartCalculator}
         isAuthenticated={!!userId}
         onSignUp={() => window.location.href = '/signup'}
@@ -397,15 +398,12 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
           </AnimatePresence>
 
           {/* Navigation - Positioned after question cards for better UX flow */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`navigation-${currentQuestion}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex items-center justify-between mt-8"
-            >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="flex items-center justify-between mt-8"
+          >
             <Button
               variant="outline"
               onClick={prevQuestion}
@@ -439,7 +437,6 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
               )}
             </Button>
           </motion.div>
-          </AnimatePresence>
         </div>
       </div>
 
@@ -477,7 +474,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
                 <h1 className="text-2xl font-outfit font-bold text-text-primary leading-tight mb-3">
                   {currentQuestionData.question}
                 </h1>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="text-text-secondary font-mono text-sm leading-relaxed">
                   {currentQuestionData.subtitle}
                 </p>
               </motion.div>

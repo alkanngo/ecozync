@@ -3,8 +3,7 @@
 import { revalidatePath } from 'next/cache'
 
 import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
-
-import type { CarbonCalculationInsert } from '../../../types/database'
+import type { CarbonCalculationInsert } from '@/libs/supabase/types'
 
 export async function saveCalculation(calculationData: any) {
   try {

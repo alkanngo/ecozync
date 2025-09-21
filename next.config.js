@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     qualities: [50, 75, 100],
+    domains: ['lh3.googleusercontent.com'],
   },
 };
 

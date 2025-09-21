@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
 import CurvedLoop from '@/components/ui/curved-loop'
+import { useAuth } from '@/contexts/auth-context'
 
 // Subtle magnetic button - less dramatic than before
 function Button({ children, href, variant = 'default' }: { children: React.ReactNode, href: string, variant?: 'default' | 'primary' | 'ghost' }) {
@@ -58,7 +60,7 @@ function RotatingStats() {
   useEffect(() => {
     const timer = setInterval(() => setIndex(i => (i + 1) % stats.length), 3000)
     return () => clearInterval(timer)
-  }, [])
+  }, [stats.length])
   
   return (
     <motion.div 
@@ -75,10 +77,33 @@ function RotatingStats() {
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false)
+  const { user, loading } = useAuth()
+  const router = useRouter()
   
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard')
+    }
+  }, [user, loading, router])
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-green"></div>
+      </div>
+    )
+  }
+
+  // Don't render if user is authenticated (will redirect)
+  if (user) {
+    return null
+  }
 
   return (
     <div className="relative overflow-hidden">

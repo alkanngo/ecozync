@@ -1,21 +1,31 @@
 import { redirect } from 'next/navigation';
 
 import { getSession } from '@/features/account/controllers/get-session';
-import { getSubscription } from '@/features/account/controllers/get-subscription';
 
 import { signInWithEmail, signInWithOAuth } from '../auth-actions';
 import { AuthUI } from '../auth-ui';
 
-export default async function LoginPage() {
-  const session = await getSession();
-  const subscription = await getSubscription();
+import { AutoOAuthLogin } from './auto-oauth-login';
 
-  if (session && subscription) {
-    redirect('/account');
+interface LoginPageProps {
+  searchParams: Promise<{
+    intent?: string;
+    provider?: string;
+    origin?: string;
+  }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const session = await getSession();
+
+  if (session) {
+    redirect('/dashboard');
   }
 
-  if (session && !subscription) {
-    redirect('/pricing');
+  // Auto-trigger OAuth if intent and provider are set
+  const params = await searchParams;
+  if (params.intent === 'oauth' && params.provider === 'google') {
+    return <AutoOAuthLogin provider="google" signInWithOAuth={signInWithOAuth} origin={params.origin} />;
   }
 
   return (
