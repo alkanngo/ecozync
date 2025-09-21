@@ -139,7 +139,7 @@ export async function POST(request: Request) {
           ...dataToInsert,
           updated_at: new Date().toISOString()
         })
-        .eq('id', existingCalculation.id)
+        .eq('id', (existingCalculation as any).id)
         .select()
         .single()
 
