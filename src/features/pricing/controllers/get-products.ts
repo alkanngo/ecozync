@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-clie
 export async function getProducts() {
   const supabase = await createSupabaseServerClient();
 
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('products')
     .select('*, prices(*)')
     .eq('active', true)
