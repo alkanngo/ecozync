@@ -133,7 +133,7 @@ export async function POST(request: Request) {
     let result
     if (existingCalculation) {
       // Update existing calculation
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('carbon_calculations')
         .update({
           ...dataToInsert,

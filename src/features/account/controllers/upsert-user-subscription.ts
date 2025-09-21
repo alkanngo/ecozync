@@ -71,7 +71,7 @@ const copyBillingDetailsToCustomer = async (userId: string, paymentMethod: Strip
 
   await stripeAdmin.customers.update(customer, { name, phone, address: address as AddressParam });
 
-  const { error } = await supabaseAdminClient
+  const { error } = await (supabaseAdminClient as any)
     .from('profiles')
     .update({
       billing_address: { ...address },

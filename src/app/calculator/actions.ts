@@ -20,10 +20,8 @@ export async function saveCalculation(calculationData: any) {
 
     if (existingCalculation) {
       // Update existing calculation
-      // @ts-ignore - Temporary type bypass until database types are regenerated
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('carbon_calculations')
-        // @ts-ignore
         .update({
           assessment_data: calculationData.assessment_data,
           transport_emissions: calculationData.transport_emissions,
