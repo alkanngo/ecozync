@@ -29,8 +29,8 @@ export function WelcomeEmail() {
           <Container className='mx-auto mt-4'>
             <Section className='text-center'>
               <Text className='m-0 text-xs text-white'>Not interested in receiving this email?</Text>
-              <Link className='text-center text-xs text-white underline' href={baseUrl + '/account'}>
-                Turn off this notification in your account settings.
+              <Link className='text-center text-xs text-white underline' href={baseUrl + '/dashboard'}>
+                Turn off this notification in your dashboard.
               </Link>
             </Section>
           </Container>

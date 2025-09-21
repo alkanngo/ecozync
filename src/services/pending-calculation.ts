@@ -63,3 +63,5 @@ export const PendingCalculationService = {
     return this.getPendingCalculation() !== null
   }
 }
+
+
