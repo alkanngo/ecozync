@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
+import { CarbonCalculationUpdate } from '@/libs/supabase/types'
 
 interface RouteContext {
   params: Promise<{
@@ -58,16 +59,36 @@ export async function PUT(request: Request, context: RouteContext) {
     const calculationId = params.id
     const updateData = await request.json()
 
-    // Remove fields that shouldn't be updated
-    const { id, user_id, created_at, ...allowedUpdates } = updateData
+    // Only allow specific fields to be updated
+    const allowedFields: (keyof CarbonCalculationUpdate)[] = [
+      'calculation_date',
+      'assessment_data',
+      'transport_emissions',
+      'energy_emissions',
+      'diet_emissions',
+      'lifestyle_emissions',
+      'travel_emissions',
+      'other_emissions',
+      'calculation_method',
+      'calculation_confidence'
+    ]
+
+    // Build update object with only allowed fields
+    const updatePayload: CarbonCalculationUpdate = {
+      updated_at: new Date().toISOString()
+    }
+
+    // Add only the allowed fields that are present in updateData
+    for (const field of allowedFields) {
+      if (updateData[field] !== undefined) {
+        updatePayload[field] = updateData[field]
+      }
+    }
 
     // Update calculation
     const { data, error } = await supabase
       .from('carbon_calculations')
-      .update({
-        ...allowedUpdates,
-        updated_at: new Date().toISOString()
-      })
+      .update(updatePayload)
       .eq('id', calculationId)
       .eq('user_id', user.id) // Ensure user can only update their own calculations
       .select()
