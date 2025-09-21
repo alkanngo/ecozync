@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         calculation_confidence: pendingCalculation.results.confidence_score
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('carbon_calculations')
         .insert(calculationData)
         .select()

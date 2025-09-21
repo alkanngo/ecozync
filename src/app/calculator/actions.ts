@@ -41,8 +41,7 @@ export async function saveCalculation(calculationData: any) {
       }
     } else {
       // Insert new calculation
-      // @ts-ignore - Temporary type bypass until database types are regenerated
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('carbon_calculations')
         .insert(calculationData)
 

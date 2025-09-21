@@ -20,7 +20,7 @@ export async function getOrCreateCustomer({ userId, email }: { userId: string; e
     const customer = await stripeAdmin.customers.create(customerData);
 
     // Insert the customer ID into our Supabase mapping table.
-    const { error: supabaseError } = await supabaseAdminClient
+    const { error: supabaseError } = await (supabaseAdminClient as any)
       .from('customers')
       .insert([{ id: userId, stripe_customer_id: customer.id }]);
 
