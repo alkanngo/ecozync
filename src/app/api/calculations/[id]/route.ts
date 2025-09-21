@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
+import { CarbonCalculationUpdate } from '@/libs/supabase/types'
 
 interface RouteContext {
   params: Promise<{
