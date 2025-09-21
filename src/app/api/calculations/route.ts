@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     }
 
     // Build query
-    let query = supabase
+    let query = (supabase as any)
       .from('carbon_calculations')
       .select('*', { count: 'exact' })
       .eq('user_id', user.id)
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     }
 
     // Check if calculation already exists for this date
-    const { data: existingCalculation } = await supabase
+    const { data: existingCalculation } = await (supabase as any)
       .from('carbon_calculations')
       .select('id')
       .eq('user_id', user.id)
@@ -150,7 +150,7 @@ export async function POST(request: Request) {
       result = data
     } else {
       // Insert new calculation
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('carbon_calculations')
         .insert(dataToInsert)
         .select()

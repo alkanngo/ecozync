@@ -52,7 +52,7 @@ export async function GET(request: Request) {
     const months = parseInt(searchParams.get('months') || '12') // Default to 12 months
 
     // Fetch all user calculations
-    const { data: calculations, error } = await supabase
+    const { data: calculations, error } = await (supabase as any)
       .from('carbon_calculations')
       .select('*')
       .eq('user_id', user.id)
@@ -93,12 +93,12 @@ export async function GET(request: Request) {
 
     // Calculate basic statistics
     const totalCalculations = calculations.length
-    const avgTotalEmissions = calculations.reduce((sum, calc) => sum + calc.total_emissions, 0) / totalCalculations
-    const avgTransportEmissions = calculations.reduce((sum, calc) => sum + calc.transport_emissions, 0) / totalCalculations
-    const avgEnergyEmissions = calculations.reduce((sum, calc) => sum + calc.energy_emissions, 0) / totalCalculations
-    const avgDietEmissions = calculations.reduce((sum, calc) => sum + calc.diet_emissions, 0) / totalCalculations
-    const avgLifestyleEmissions = calculations.reduce((sum, calc) => sum + calc.lifestyle_emissions, 0) / totalCalculations
-    const avgTravelEmissions = calculations.reduce((sum, calc) => sum + calc.travel_emissions, 0) / totalCalculations
+    const avgTotalEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.total_emissions, 0) / totalCalculations
+    const avgTransportEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.transport_emissions, 0) / totalCalculations
+    const avgEnergyEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.energy_emissions, 0) / totalCalculations
+    const avgDietEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.diet_emissions, 0) / totalCalculations
+    const avgLifestyleEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.lifestyle_emissions, 0) / totalCalculations
+    const avgTravelEmissions = calculations.reduce((sum: number, calc: any) => sum + calc.travel_emissions, 0) / totalCalculations
 
     // Calculate category breakdown percentages
     const totalAvgEmissions = avgTransportEmissions + avgEnergyEmissions + avgDietEmissions + avgLifestyleEmissions + avgTravelEmissions
@@ -116,8 +116,8 @@ export async function GET(request: Request) {
     cutoffDate.setMonth(cutoffDate.getMonth() - months)
 
     calculations
-      .filter(calc => new Date(calc.calculation_date) >= cutoffDate)
-      .forEach(calc => {
+      .filter((calc: any) => new Date(calc.calculation_date) >= cutoffDate)
+      .forEach((calc: any) => {
         const monthKey = calc.calculation_date.substring(0, 7) // YYYY-MM format
         const existing = monthlyData.get(monthKey) || { total: 0, count: 0 }
         monthlyData.set(monthKey, {

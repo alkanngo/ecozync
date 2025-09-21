@@ -22,7 +22,7 @@ export async function GET(request: Request, context: RouteContext) {
     const calculationId = params.id
 
     // Fetch specific calculation
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('carbon_calculations')
       .select('*')
       .eq('id', calculationId)
