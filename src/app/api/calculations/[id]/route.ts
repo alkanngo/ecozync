@@ -2,7 +2,6 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { createSupabaseServerClient } from '@/libs/supabase/supabase-server-client'
-import { CarbonCalculationUpdate } from '@/libs/supabase/types'
 
 interface RouteContext {
   params: Promise<{
@@ -59,10 +58,8 @@ export async function PUT(request: Request, context: RouteContext) {
     const calculationId = params.id
     const updateData = await request.json()
 
-    // Build update object with explicit typing to avoid TypeScript inference issues
-    const updatePayload: any = {
-      updated_at: new Date().toISOString()
-    }
+    // Build update object manually to avoid type issues
+    const fieldsToUpdate: Record<string, any> = {}
 
     // Only allow specific fields to be updated
     const allowedFields = [
@@ -81,16 +78,19 @@ export async function PUT(request: Request, context: RouteContext) {
     // Add only the allowed fields that are present in updateData
     for (const field of allowedFields) {
       if (updateData[field] !== undefined) {
-        updatePayload[field] = updateData[field]
+        fieldsToUpdate[field] = updateData[field]
       }
     }
 
-    // Update calculation
-    const { data, error } = await supabase
+    // Always update the timestamp
+    fieldsToUpdate.updated_at = new Date().toISOString()
+
+    // Use type assertion to bypass the typing issues
+    const { data, error } = await (supabase as any)
       .from('carbon_calculations')
-      .update(updatePayload)
+      .update(fieldsToUpdate)
       .eq('id', calculationId)
-      .eq('user_id', user.id) // Ensure user can only update their own calculations
+      .eq('user_id', user.id)
       .select()
       .single()
 
