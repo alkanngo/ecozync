@@ -4,29 +4,67 @@
   },
   "fixtures": [
     {
-      "name": "basic",
+      "name": "personal_3_tonnes",
       "path": "/v1/products",
       "method": "post",
       "params": {
-        "name": "Basic",
-        "description": "Perfect product for small businesses.",
+        "name": "Personal - 3 Tonnes",
+        "description": "Personal carbon offsetting for individual climate action. Perfect for single-person households or those starting their sustainability journey.",
         "metadata": {
-          "price_card_variant": "basic",
-          "generated_images": 10,
-          "image_editor": "basic",
+          "price_card_variant": "personal",
+          "carbon_offset_tonnes": "3",
+          "target_audience": "Individual",
+          "features": "Personal tracking, Monthly reports, Achievement system, Friend connections",
+          "offset_type": "verified_gold_standard",
+          "calculation_frequency": "unlimited",
+          "social_features": "basic",
+          "support_level": "community"
+        }
+      }
+    },
+    {
+      "name": "price_personal_month",
+      "path": "/v1/prices",
+      "method": "post",
+      "params": {
+        "product": "${personal_3_tonnes:id}",
+        "currency": "eur",
+        "billing_scheme": "per_unit",
+        "unit_amount": 450,
+        "recurring": {
+          "interval": "month",
+          "interval_count": 1
+        }
+      }
+    },
+    {
+      "name": "household_6_tonnes",
+      "path": "/v1/products",
+      "method": "post",
+      "params": {
+        "name": "Household - 6 Tonnes",
+        "description": "Extended household coverage for couples or small families. Comprehensive carbon tracking with enhanced social features.",
+        "metadata": {
+          "price_card_variant": "household",
+          "carbon_offset_tonnes": "6",
+          "target_audience": "Household",
+          "features": "Household tracking, Weekly insights, Priority support, Advanced challenges, Group features",
+          "offset_type": "verified_gold_standard",
+          "calculation_frequency": "unlimited",
+          "social_features": "enhanced",
           "support_level": "email"
         }
       }
     },
     {
-      "name": "price_basic_month",
+      "name": "price_household_month",
       "path": "/v1/prices",
       "method": "post",
       "params": {
-        "product": "${basic:id}",
-        "currency": "usd",
+        "product": "${household_6_tonnes:id}",
+        "currency": "eur",
         "billing_scheme": "per_unit",
-        "unit_amount": 500,
+        "unit_amount": 900,
         "recurring": {
           "interval": "month",
           "interval_count": 1
@@ -34,76 +72,36 @@
       }
     },
     {
-      "name": "price_basic_year",
-      "path": "/v1/prices",
-      "method": "post",
-      "params": {
-        "product": "${basic:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 5000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "pro",
+      "name": "family_12_tonnes",
       "path": "/v1/products",
       "method": "post",
       "params": {
-        "name": "Pro",
-        "description": "Perfect product for growing or large businesses.",
+        "name": "Family - 12 Tonnes",
+        "description": "Full family impact offsetting for larger households. Complete climate action solution with premium features and dedicated support.",
         "metadata": {
-          "price_card_variant": "pro",
-          "generated_images": 100,
-          "image_editor": "pro",
-          "support_level": "live"
+          "price_card_variant": "family",
+          "carbon_offset_tonnes": "12",
+          "target_audience": "Family",
+          "features": "Family dashboard, Real-time insights, Priority support, Exclusive challenges, Team leaderboards, Impact reporting",
+          "offset_type": "verified_gold_standard",
+          "calculation_frequency": "unlimited",
+          "social_features": "premium",
+          "support_level": "priority"
         }
       }
     },
     {
-      "name": "price_pro_month",
+      "name": "price_family_month",
       "path": "/v1/prices",
       "method": "post",
       "params": {
-        "product": "${pro:id}",
-        "currency": "usd",
+        "product": "${family_12_tonnes:id}",
+        "currency": "eur",
         "billing_scheme": "per_unit",
-        "unit_amount": 1000,
+        "unit_amount": 1800,
         "recurring": {
           "interval": "month",
           "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "price_pro_year",
-      "path": "/v1/prices",
-      "method": "post",
-      "params": {
-        "product": "${pro:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 10000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "enterprise",
-      "path": "/v1/products",
-      "method": "post",
-      "params": {
-        "name": "Enterprise",
-        "description": "Perfect product for enterprises.",
-        "metadata": {
-          "price_card_variant": "enterprise",
-          "image_editor": "pro",
-          "support_level": "live"
         }
       }
     }

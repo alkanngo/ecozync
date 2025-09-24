@@ -135,21 +135,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase, fetchProfile])
 
   useEffect(() => {
+    let mounted = true
+    
     // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         
-        if (session?.user) {
+        if (mounted && session?.user) {
           setUser(session.user)
           const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
+          if (mounted) {
+            setProfile(profileData)
+          }
         }
         
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       } catch (error) {
         console.error('Error getting initial session:', error)
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     }
 
@@ -158,32 +166,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!mounted) return
         
         if (session?.user) {
           setUser(session.user)
           const profileData = await fetchProfile(session.user.id)
-          setProfile(profileData)
+          if (mounted) {
+            setProfile(profileData)
+          }
           
           // Check for pending calculations after successful login
           // Note: OAuth flows trigger 'INITIAL_SESSION' instead of 'SIGNED_IN'
-          if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && profileData) {
+          if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && profileData && mounted) {
             // Only save if there's actually a pending calculation
             if (PendingCalculationService.hasPendingCalculation()) {
               setTimeout(async () => {
-                await savePendingCalculationForUser(session.user, profileData)
+                if (mounted) {
+                  await savePendingCalculationForUser(session.user, profileData)
+                }
               }, 1000) // Small delay to ensure everything is set up
             }
           }
-        } else {
+        } else if (mounted) {
           setUser(null)
           setProfile(null)
         }
         
-        setLoading(false)
+        if (mounted) {
+          setLoading(false)
+        }
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [fetchProfile, savePendingCalculationForUser, supabase.auth])
 
   const value = {

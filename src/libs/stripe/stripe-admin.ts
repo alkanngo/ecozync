@@ -8,7 +8,8 @@ export const stripeAdmin = new Stripe(getEnvVar(process.env.STRIPE_SECRET_KEY, '
   // Register this as an official Stripe plugin.
   // https://stripe.com/docs/building-plugins#setappinfo
   appInfo: {
-    name: 'UPDATE_THIS_WITH_YOUR_STRIPE_APP_NAME',
+    name: 'Ecozync - Carbon Tracking PWA',
     version: '0.1.0',
+    url: 'https://ecozync.com',
   },
 });
