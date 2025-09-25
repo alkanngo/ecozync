@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 interface LeaderboardUser {
   id: string
   display_name: string | null
@@ -152,10 +154,12 @@ export default function Leaderboard({ currentUserId, friends }: LeaderboardProps
               {/* User Avatar - smaller */}
               <div className="mx-2">
                 {user.avatar_url ? (
-                  <img
+                  <Image
                     src={user.avatar_url}
                     alt={user.display_name || 'User'}
                     className="w-6 h-6 rounded-full border border-accent-green/30"
+                    width={24}
+                    height={24}
                   />
                 ) : (
                   <div className="w-6 h-6 rounded-full bg-surface-darker border border-accent-green/30 flex items-center justify-center">

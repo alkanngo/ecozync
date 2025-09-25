@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { formatDistanceToNow } from 'date-fns'
 import { AnimatePresence,motion } from 'framer-motion'
 
@@ -285,10 +286,12 @@ export default function ActivityFeed({ userId }: ActivityFeedProps) {
                       {/* User Avatar - smaller */}
                       <div className="relative flex-shrink-0">
                         {activity.user_profile?.avatar_url ? (
-                          <img
+                          <Image
                             src={activity.user_profile.avatar_url}
                             alt={getUserName(activity)}
                             className="w-8 h-8 rounded-full border border-accent-green/30"
+                            width={32}
+                            height={32}
                           />
                         ) : (
                           <div className="w-8 h-8 rounded-full bg-surface-darker border border-accent-green/30 flex items-center justify-center">

@@ -46,9 +46,9 @@ export function PricingCard({
   const isBillingIntervalYearly = billingInterval === 'year';
   const metadata = productMetadataSchema.parse(product.metadata);
   const buttonVariantMap = {
-    basic: 'default',
-    pro: 'living',
-    enterprise: 'orange',
+    personal: 'default',
+    household: 'living',
+    family: 'orange',
   } as const;
 
   function handleBillingIntervalChange(billingInterval: BillingInterval) {
@@ -75,12 +75,14 @@ export function PricingCard({
         {!Boolean(price) && product.prices.length > 1 && <PricingSwitch onChange={handleBillingIntervalChange} />}
 
         <div className='m-auto flex w-fit flex-1 flex-col gap-2 px-8 py-4'>
-          {metadata.generatedImages === 'enterprise' && <CheckItem text={`Unlimited banner images`} />}
-          {metadata.generatedImages !== 'enterprise' && (
-            <CheckItem text={`Generate ${metadata.generatedImages} banner images`} />
-          )}
-          {<CheckItem text={`${metadata.imageEditor} image editing features`} />}
-          {<CheckItem text={`${metadata.supportLevel} support`} />}
+          <CheckItem text={`${metadata.carbonOffsetTonnes} tonnes CO₂ offset per month`} />
+          <CheckItem text={`${metadata.offsetType.replace(/_/g, ' ')} carbon credits`} />
+          <CheckItem text={`${metadata.calculationFrequency} carbon calculations`} />
+          {metadata.features.map((feature, index) => (
+            <CheckItem key={index} text={feature} />
+          ))}
+          <CheckItem text={`${metadata.socialFeatures} social features`} />
+          <CheckItem text={`${metadata.supportLevel} support`} />
         </div>
 
         {createCheckoutAction && (
@@ -120,7 +122,7 @@ export function WithLivingBorder({
   className,
   children,
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant: PriceCardVariant }) {
-  if (variant === 'pro') {
+  if (variant === 'household') {
     return (
       <LivingBorder className={className} offset={100}>
         {children}
