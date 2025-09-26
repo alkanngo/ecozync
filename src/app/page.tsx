@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
+import { SocialLoginButtons } from '@/components/auth/social-login-buttons'
 import CurvedLoop from '@/components/ui/curved-loop'
 import { useAuth } from '@/contexts/auth-context'
 
@@ -217,15 +218,24 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
+                className="flex flex-col sm:flex-row gap-4 pt-4 justify-center items-center"
               >
-                <Button href="/calculator" variant="primary">
-                  Calculate Your Footprint
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-                <Button href="/login" variant="ghost">
-                  Sign In to Track Progress
-                </Button>
+                {/* Primary CTA */}
+                <div className="flex justify-center">
+                  <Button href="/calculator" variant="primary">
+                    Calculate Your Footprint
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                {/* Social Login - animated in after primary CTA */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <SocialLoginButtons />
+                </motion.div>
               </motion.div>
             )}
 

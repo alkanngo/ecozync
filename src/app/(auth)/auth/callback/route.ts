@@ -53,10 +53,12 @@ export async function GET(request: NextRequest) {
 
       console.log('OAuth success for user:', user.id);
       
-      // For users coming from calculator, redirect to dashboard with success message
+      // Handle different origins for post-auth routing
       const origin = requestUrl.searchParams.get('origin');
       if (origin === 'calculator') {
         return NextResponse.redirect(`${siteUrl}/dashboard?welcome=true`);
+      } else if (origin === 'homepage') {
+        return NextResponse.redirect(`${siteUrl}/dashboard?source=homepage`);
       }
 
       // Redirect to dashboard after successful authentication

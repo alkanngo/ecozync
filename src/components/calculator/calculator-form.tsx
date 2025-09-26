@@ -286,8 +286,6 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
         assessmentData={assessmentData}
         onRestart={restartCalculator}
         isAuthenticated={!!userId}
-        onSignUp={() => window.location.href = '/signup'}
-        onLogin={() => window.location.href = '/login'}
       />
     )
   }

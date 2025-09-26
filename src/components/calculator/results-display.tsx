@@ -236,11 +236,12 @@ export default function ResultsDisplay({
         PendingCalculationService.storePendingCalculation(results, assessmentData)
       }
 
-      // For now, only Google is supported, redirect others to regular login
+      // Use the server action for OAuth
+      const { signInWithOAuth } = await import('@/app/(auth)/auth-actions')
+      
       if (provider === 'google') {
-        window.location.href = '/login?intent=oauth&provider=google&origin=calculator'
+        await signInWithOAuth(provider as 'google', 'calculator')
       } else {
-        window.location.href = '/login'
         toast({
           title: "Coming Soon",
           description: `${provider} login will be available soon. Please use Google for now.`,

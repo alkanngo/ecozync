@@ -125,12 +125,6 @@ async function AppBar() {
         {/* Desktop: Show buttons */}
         <div className="hidden items-center gap-3">
           <Link
-            href="/login"
-            className="px-7 py-3.5 rounded-full font-outfit text-[15px] bg-white/[0.03] text-text-primary border border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all"
-          >
-            Sign In
-          </Link>
-          <Link
             href="/calculator"
             className="px-7 py-3.5 rounded-full font-outfit text-[15px] bg-accent-green text-primary-dark hover:bg-accent-green/90 transition-all"
           >
