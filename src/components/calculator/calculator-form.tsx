@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Calculator } from 'lucide-react'
 
@@ -158,8 +158,25 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
   } | null>(null)
   const [isCalculating, setIsCalculating] = useState(false)
   const [showResults, setShowResults] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const { toast } = useToast()
   const localStorage = useLocalCalculationStorage()
+
+  // Mobile detection effect
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 1024) // lg breakpoint is 1024px
+    }
+
+    // Check on mount
+    checkIsMobile()
+
+    // Add resize listener
+    window.addEventListener('resize', checkIsMobile)
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
 
   const updateAssessmentData = useCallback((category: keyof AssessmentData, data: any) => {
     setAssessmentData((prev: AssessmentData) => ({
@@ -294,9 +311,11 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
 
   return (
     <>
-    <div className="flex relative full-content-height max-w-[1440px] mx-auto w-full">
-      {/* Left Side - Question Text and Progress */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center px-8 lg:px-16 xl:px-24 relative z-10">
+    {!isMobile ? (
+      // Desktop Layout
+      <div className="flex relative full-content-height max-w-[1440px] mx-auto w-full">
+        {/* Left Side - Question Text and Progress */}
+        <div className="flex flex-1 flex-col justify-center px-8 lg:px-16 xl:px-24 relative z-10">
         
         {/* Progress Indicator - Minimalistic */}
         <motion.div
@@ -378,7 +397,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
       </div>
 
       {/* Right Side - Question Cards */}
-      <div className="hidden lg:flex flex-1 flex-col justify-center p-8 lg:p-16">
+      <div className="flex flex-1 flex-col justify-center p-8 lg:p-16">
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait">
             {currentQuestionData && (
@@ -439,9 +458,9 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
         </div>
       </div>
     </div>
-
-    {/* Mobile Layout - Stacked */}
-    <div className="lg:hidden fixed inset-x-0 flex flex-col z-20" style={{ top: '96px', bottom: '60px' }}>
+    ) : (
+      // Mobile Layout - Stacked
+      <div className="flex flex-col relative z-20" >
       <div className="flex-1 flex flex-col justify-center px-6 py-8">
         {/* Progress */}
         <div className="mb-6">
@@ -466,7 +485,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
             <motion.div
               key={currentQuestion}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0, x: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
               className="mb-6"
@@ -482,7 +501,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
         </AnimatePresence>
 
         {/* Options */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
             {currentQuestionData && (
               <QuestionCard
@@ -530,6 +549,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
         </div>
       </div>
     </div>
+    )}
   </>
   )
 }
