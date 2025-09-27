@@ -293,7 +293,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
   const currentQuestionData = getCurrentQuestion()
 
   return (
-    <div className="flex relative full-content-height max-w-[1440px] mx-auto w-full">
+    <div className="hidden lg:flex relative full-content-height max-w-[1440px] mx-auto w-full">
       {/* Left Side - Question Text and Progress */}
       <div className="flex-1 flex flex-col justify-center px-8 lg:px-16 xl:px-24 relative z-10">
         
