@@ -104,7 +104,7 @@ export function SocialLoginButtons({ onLoginStart, className = "" }: SocialLogin
       >
         <div className="flex items-center justify-center gap-2">
           <Sparkles className="w-4 h-4 text-accent-green" />
-          <span>Sign In to Track Progress</span>
+          <span>Login With Your Socials</span>
           <motion.div
             animate={{ rotate: expanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}

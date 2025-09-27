@@ -293,9 +293,10 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
   const currentQuestionData = getCurrentQuestion()
 
   return (
-    <div className="hidden lg:flex relative full-content-height max-w-[1440px] mx-auto w-full">
+    <>
+    <div className="flex relative full-content-height max-w-[1440px] mx-auto w-full">
       {/* Left Side - Question Text and Progress */}
-      <div className="flex-1 flex flex-col justify-center px-8 lg:px-16 xl:px-24 relative z-10">
+      <div className="hidden lg:flex flex-1 flex-col justify-center px-8 lg:px-16 xl:px-24 relative z-10">
         
         {/* Progress Indicator - Minimalistic */}
         <motion.div
@@ -377,7 +378,7 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
       </div>
 
       {/* Right Side - Question Cards */}
-      <div className="flex-1 flex flex-col justify-center p-8 lg:p-16">
+      <div className="hidden lg:flex flex-1 flex-col justify-center p-8 lg:p-16">
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait">
             {currentQuestionData && (
@@ -437,97 +438,98 @@ export default function CalculatorForm({ userId }: CalculatorFormProps) {
           </motion.div>
         </div>
       </div>
+    </div>
 
-      {/* Mobile Layout - Stacked */}
-      <div className="lg:hidden fixed inset-x-0 flex flex-col z-20 bg-primary-dark" style={{ top: '96px', bottom: '60px' }}>
-        <div className="flex-1 flex flex-col justify-center px-6 py-8">
-          {/* Progress */}
-          <div className="mb-6">
-            <div className="flex items-center space-x-2 text-sm font-mono text-text-secondary">
-              <span className="text-accent-green">{currentQuestion.toString().padStart(2, '0')}</span>
-              <span>/</span>
-              <span>{totalQuestions.toString().padStart(2, '0')}</span>
-            </div>
-            <div className="w-16 h-0.5 bg-surface-darker mt-2 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-accent-green rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${(currentQuestion / totalQuestions) * 100}%` }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              />
-            </div>
+    {/* Mobile Layout - Stacked */}
+    <div className="lg:hidden fixed inset-x-0 flex flex-col z-20" style={{ top: '96px', bottom: '60px' }}>
+      <div className="flex-1 flex flex-col justify-center px-6 py-8">
+        {/* Progress */}
+        <div className="mb-6">
+          <div className="flex items-center space-x-2 text-sm font-mono text-text-secondary">
+            <span className="text-accent-green">{currentQuestion.toString().padStart(2, '0')}</span>
+            <span>/</span>
+            <span>{totalQuestions.toString().padStart(2, '0')}</span>
           </div>
+          <div className="w-16 h-0.5 bg-surface-darker mt-2 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-accent-green rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${(currentQuestion / totalQuestions) * 100}%` }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            />
+          </div>
+        </div>
 
-          {/* Question */}
+        {/* Question */}
+        <AnimatePresence mode="wait">
+          {currentQuestionData && (
+            <motion.div
+              key={currentQuestion}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="mb-6"
+            >
+              <h1 className="text-2xl font-outfit font-bold text-text-primary leading-tight mb-3">
+                {currentQuestionData.question}
+              </h1>
+              <p className="text-text-secondary font-mono text-sm leading-relaxed">
+                {currentQuestionData.subtitle}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Options */}
+        <div className="flex-1 overflow-auto">
           <AnimatePresence mode="wait">
             {currentQuestionData && (
-              <motion.div
+              <QuestionCard
                 key={currentQuestion}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-                className="mb-6"
-              >
-                <h1 className="text-2xl font-outfit font-bold text-text-primary leading-tight mb-3">
-                  {currentQuestionData.question}
-                </h1>
-                <p className="text-text-secondary font-mono text-sm leading-relaxed">
-                  {currentQuestionData.subtitle}
-                </p>
-              </motion.div>
+                question=""
+                subtitle=""
+                options={currentQuestionData.options}
+                currentValue={getCurrentValue()}
+                onChange={handleQuestionChange}
+                questionNumber={currentQuestion}
+                totalQuestions={totalQuestions}
+                mobile={true}
+              />
             )}
           </AnimatePresence>
+        </div>
 
-          {/* Options */}
-          <div className="flex-1 overflow-auto">
-            <AnimatePresence mode="wait">
-              {currentQuestionData && (
-                <QuestionCard
-                  key={currentQuestion}
-                  question=""
-                  subtitle=""
-                  options={currentQuestionData.options}
-                  currentValue={getCurrentValue()}
-                  onChange={handleQuestionChange}
-                  questionNumber={currentQuestion}
-                  totalQuestions={totalQuestions}
-                  mobile={true}
-                />
-              )}
-            </AnimatePresence>
-          </div>
+        {/* Navigation */}
+        <div className="flex justify-between items-center pt-6">
+          <Button
+            variant="outline"
+            onClick={prevQuestion}
+            disabled={currentQuestion === 1}
+            className="bg-surface-darker/80 border-accent-green/30 text-text-secondary hover:bg-accent-green/15 hover:border-accent-green/50 hover:scale-[1.02] transition-all duration-300 disabled:opacity-30 disabled:hover:scale-100"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
 
-          {/* Navigation */}
-          <div className="flex justify-between items-center pt-6">
-            <Button
-              variant="outline"
-              onClick={prevQuestion}
-              disabled={currentQuestion === 1}
-              className="bg-surface-darker/80 border-accent-green/30 text-text-secondary hover:bg-accent-green/15 hover:border-accent-green/50 hover:scale-[1.02] transition-all duration-300 disabled:opacity-30 disabled:hover:scale-100"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-
-            <Button
-              onClick={nextQuestion}
-              disabled={isCalculating || !getCurrentValue()}
-              className="bg-accent-green hover:bg-accent-green/90 hover:scale-[1.02] text-primary-dark font-medium px-8 transition-all duration-300 disabled:hover:scale-100"
-            >
-              {isCalculating ? (
-                <Calculator className="w-4 h-4 animate-spin" />
-              ) : currentQuestion === totalQuestions ? (
-                <>
-                  Calculate
-                  <Calculator className="w-4 h-4 ml-2" />
-                </>
-              ) : (
-                <ArrowRight className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
+          <Button
+            onClick={nextQuestion}
+            disabled={isCalculating || !getCurrentValue()}
+            className="bg-accent-green hover:bg-accent-green/90 hover:scale-[1.02] text-primary-dark font-medium px-8 transition-all duration-300 disabled:hover:scale-100"
+          >
+            {isCalculating ? (
+              <Calculator className="w-4 h-4 animate-spin" />
+            ) : currentQuestion === totalQuestions ? (
+              <>
+                Calculate
+                <Calculator className="w-4 h-4 ml-2" />
+              </>
+            ) : (
+              <ArrowRight className="w-4 h-4" />
+            )}
+          </Button>
         </div>
       </div>
     </div>
+  </>
   )
 }

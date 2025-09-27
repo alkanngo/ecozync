@@ -20,23 +20,6 @@ export default async function CalculatorPage() {
           animationTimingFunction: 'ease-in-out'
         }}
       />
-      
-      {/* Organic particles */}
-      <div className="fixed inset-0 pointer-events-none">
-        {Array.from({ length: 12 }, (_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-accent-green/20 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${15 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
-
       <CalculatorForm userId={userId} />
     </div>
   )
